@@ -1,0 +1,6 @@
+/h264decoder/build/
+libh264decoder.so
+*.pyc
+*.swp
+__pycache__
+Tello_SDK_2.0_使用说明.pdf
