@@ -5,6 +5,9 @@ import numpy as np
 import libh264decoder
 from stats import Stats
 
+import rospy
+from std_msgs.msg import String
+
 
 class Tello:
     """Wrapper class to interact with the Tello drone."""
@@ -77,6 +80,9 @@ class Tello:
             target=self._recevie_state_thread)
         self.receive_state_thread.daemon = True
         self.receive_state_thread.start()
+
+        # Feedback
+        self.feedback_pub_ = rospy.Publisher('command_feedback', String, queue_size=3)
 
     def __del__(self):
         """Closes the local socket."""
@@ -210,10 +216,16 @@ class Tello:
                 # print(len(self.log))
                 if diff > self.MAX_TIME_OUT:
                     print ('Max timeout exceeded... command %s' % command)
+                    msg = String()
+                    msg.data = command + "!False"
+                    self.feedback_pub_.publish(msg)
                     raise Exception('command timeout')
 
         print ('Done!!! sent command: %s to %s' % (command, self.tello_ip))
         print (self.log[-1].got_response())
+        msg = String()
+        msg.data = command + "!True"
+        self.feedback_pub_.publish(msg)
         return self.log[-1].got_response()
 
     def set_abort_flag(self):
