@@ -1,6 +1,10 @@
-/h264decoder/build/
+lib
 libh264decoder.so
+Tello_SDK_2.0_使用说明.pdf
+.vscode
+
 *.pyc
 *.swp
 __pycache__
-Tello_SDK_2.0_使用说明.pdf
+
+!tello_detect.py
